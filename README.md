@@ -2,6 +2,16 @@
 
 ## Frontend
 
+We used React for the frontend.
+
+### Why React?
+
+We had basic knowledge for React.
+
+### Styling
+
+We used Tailwind CSS for styling.
+
 ## Backend
 
 We used for the backend Python.
