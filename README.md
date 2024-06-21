@@ -12,6 +12,13 @@ We had basic knowledge for React.
 
 We used Tailwind CSS for styling.
 
+### How to start?
+
+```
+npm install
+npm start
+```
+
 ## Backend
 
 We used for the backend Python.
