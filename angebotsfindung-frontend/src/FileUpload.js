@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 function FileUpload({requirements, onBefore}) {
     const [files, setFiles] = useState([]);
@@ -6,15 +6,22 @@ function FileUpload({requirements, onBefore}) {
     const [filesWithContent, setFilesWithContent] = useState([{
         fileTitle: "Paper.pdf",
         fileResponse: "This is a longgggggg very long response This is a longgggggg very long responseThis is a longgggggg very long responseThis is a longgggggg very long response"
-    }, {
-        fileTitle: "Paper.pdf",
-        fileResponse: "This is a longgggggg very long response This is a longgggggg very long responseThis is a longgggggg very long responseThis is a longgggggg very long response"
-    }]);
+    }
+    ]);
+
+    const [isUploading, setIsUploading] = useState(false);
+
 
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files);
         const pdfFiles = selectedFiles.filter(file => file.type === "application/pdf");
         setFiles(pdfFiles);
+        setFilesWithContent(pdfFiles.map(file => {
+            return {
+                fileTitle: file.name,
+                fileResponse: "",
+            }
+        }))
     };
 
     const handleBefore = () => {
@@ -30,17 +37,18 @@ function FileUpload({requirements, onBefore}) {
             for (let i = 0; i < files.length; i++) {
                 formData.append("files", files[i]);
             }
-            formData.append("requirements",requirements.map(requirement => requirement.requirement).join("\n"));
+            formData.append("requirements", requirements.map(requirement => requirement.requirement).join("\n"));
             setUploadStatus(true);
             try {
-                const response = await fetch("/uploadfiles", {
+                setIsUploading(true);
+                const response = await fetch("/api/uploadfiles", {
                     method: "POST",
                     body: formData,
                 });
 
                 const result = await response.json();
                 setUploadStatus(false);
-
+                setIsUploading(false);
                 const files = result.files;
                 console.log(files);
                 setFilesWithContent(
@@ -69,25 +77,37 @@ function FileUpload({requirements, onBefore}) {
     };
 
     return (
-        <div className={"block w-full p-4"}>
-            <input type="file" accept="application/pdf" multiple onChange={handleFileChange} />
-            <button disabled={uploadStatus} className={`font-mono px-3 py-1 bg-amber-50 border border-amber-200 rounded-sm text-sm ${uploadStatus ? "border-amber-100/80 bg-amber-50/80" : ""}`} onClick={handleFileUpload}>
-                {uploadStatus ? "isLoading" :  "upload files"}
-            </button>
+        <div className={"block  w-full px-20"}>
+            <div className={"w-full flex justify-center"}>
+                <input type="file" accept="application/pdf" multiple onChange={handleFileChange}/>
+                <button disabled={uploadStatus || files.length === 0}
+                        className={`font-mono disabled:opacity-50 
+                         px-4 py-2 bg-amber-50 border border-amber-300 rounded-md text-amber-600 tracking-tight text-sm ${uploadStatus ? "border-amber-100/80 bg-amber-50/80" : ""}`}
+                        onClick={handleFileUpload}>
+                    {uploadStatus ? "isLoading" : "upload files"}
+                </button>
+            </div>
             <div>{uploadStatus}</div>
-            <div className={"w-full grid grid-cols-1 gap-2  md:grid-cols-2 py-10"}>
+            <div className={"w-full grid grid-cols-1 gap-10 px-10 md:grid-cols-2 py-10 "}>
                 {filesWithContent.map((fileWithContent, index) => {
                     return (
-                        <div key={index} className={"p-4 m-2 h-full border border-slate-100 tracking-tight rounded-sm"}>
-                            <div className={"text-md font-mono"}>
+                        <div key={index}
+                             className={"p-4 m-2 min-h-60 w-fit border border-slate-300 bg-gray-50 tracking-tight rounded-md min-w-full"}>
+                            <div className={"text-lg tracking-tight font-mono"}>
                                 {fileWithContent.fileTitle}
                             </div>
-                            <div className={"mt-5  tracking-normal"}>
+                            <div className={"flex flex-col justify-end p-4  tracking-normal"}>
                                 {fileWithContent.fileResponse.split("**").map((paragraph, index) => {
                                     return (
-                                        <p key={index} className={"mb-5"}>
-                                            {paragraph}
-                                        </p>
+                                        <div key={index}>
+                                            <p className={"mb-5  break-words"}>
+                                                {paragraph}
+                                            </p>
+                                            <span
+                                                className={`loading loading-dots loading-md ${isUploading ? "block" : "hidden"} `}
+                                            ></span>
+                                        </div>
+
                                     )
                                 })}
                             </div>
@@ -95,9 +115,15 @@ function FileUpload({requirements, onBefore}) {
                     )
                 })}
             </div>
-            <button onClick={handleBefore}>Back</button>
+            <button
+                onClick={handleBefore}
+                className={"bg-black text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-100"}
+            >
+                Back
+            </button>
         </div>
-    );
+    )
+        ;
 }
 
 export default FileUpload;

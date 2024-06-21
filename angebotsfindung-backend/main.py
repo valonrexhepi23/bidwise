@@ -6,13 +6,15 @@ import fitz  # PyMuPDF
 import openai
 from dotenv import load_dotenv
 import os
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores.faiss import FAISS
 
 load_dotenv()
 
 app = FastAPI()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
 
 origins = [
     "http://localhost:3000",
@@ -69,17 +71,44 @@ async def process_file(file: UploadFile, requirements: str = None):
         return {"filename": file.filename, "error": "Invalid file type"}
 
     text = await extract_text_from_pdf(file)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=100,
+        chunk_overlap=0,
+        length_function=len,
+    )
+
+    texts = text_splitter.split_text(text)
+    embeddings = OpenAIEmbeddings()
+
+    requirements_list = requirements.split("\n")
+    results = {}
+    offer_embeddings = embeddings.embed_documents(texts)
+    for req in requirements_list:
+        vectors = embeddings.embed_query(req)
+        vector_store = FAISS.from_embeddings(
+            text_embeddings=list(zip(texts, offer_embeddings)),
+            embedding=embeddings
+        )
+        similar_offers = vector_store.similarity_search_by_vector(vectors, k=3)
+        if similar_offers:
+            results[req] = similar_offers[0].page_content
+        else:
+            results[req] = ""
 
     # Call OpenAI API with extracted text
+    results = "\n".join([f"{k}: {v}" for k, v in results.items()])
     response = openai.chat.completions.create(
         messages=[
             {"role": "system",
              "content": "Du bist ein erfahrener Angebotsanalyst. Vergleiche das folgende Angebot mit den angegebenen "
-                        "Anforderungen und liste kurz die positiven und negativen Aspekte auf."},
-            {"role": "user", "content": prompt(requirements, text)},
+                        "Anforderungen und liste kurz die positiven und negativen Aspekte auf. Gib eine sehr kurze "
+                        "Beschreibung (1 Satz) für jede erfüllte und nicht erfüllte Anforderung. Du sollst nichts "
+                        "erfinden. Wenn du keine Informationen über eine Anforderung hast sollst du sie auch nicht "
+                        "beurteilen."},
+            {"role": "user", "content": prompt(requirements, results)},
         ],
-        model="gpt-4o",
-        max_tokens=1000,
+        model="gpt-4-turbo",
+        max_tokens=2000,
     )
 
     print(response.choices[0].message.content)
