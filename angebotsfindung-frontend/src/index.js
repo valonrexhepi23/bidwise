@@ -9,26 +9,36 @@ import {
 } from "react-router-dom";
 import FileUploadApp from "./file-upload/FileUpload";
 import ProjectPage from "./pages/ProjectPage";
+import VectorSearch from "./pages/VectorSearch";
+import AiModel from "./pages/AiModel";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App />,
+        element: <App/>,
     },
     {
         path: "/fileupload",
-        element: <FileUploadApp />,
+        element: <FileUploadApp/>,
     },
     {
         path: "/project",
-        element: <ProjectPage />,
+        element: <ProjectPage/>,
+    },
+    {
+        path: "/vectorsearch",
+        element: <VectorSearch/>,
+    },
+    {
+        path: "/ai",
+        element: <AiModel />,
     }
 ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

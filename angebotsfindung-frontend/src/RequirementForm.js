@@ -29,9 +29,13 @@ function RequirementsForm({onNext}) {
     };
 
 
-
     return (
         <div className={"w-full flex flex-col items-center mt-5"}>
+            <div className={"flex items-center justify-center p-4 pb-20"}>
+                <p>
+                    Gebe die Anforderungen ein. Anhand dieser Anforderungen werden die Angebote verglichen.
+                </p>
+            </div>
             <div className={"border p-4 rounded-md shadow-md "}>
                 <div className={"flex gap-2 pt-2 justify-end"}>
 
@@ -42,6 +46,7 @@ function RequirementsForm({onNext}) {
                         Nächste Seite
                     </button>
                 </div>
+
                 <div className={"min-h-[250px] w-full min-w-[400px] flex flex-col items-center relative max-w-[500px]"}>
                     <div className={"w-full flex flex-wrap gap-2 pt-10"}>
 

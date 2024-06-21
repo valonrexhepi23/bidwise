@@ -13,18 +13,21 @@ function App() {
     const features = [
         {
             title: "Blitzschnelle Vergleiche",
-            description: "Unsere KI analysiert Mehrere von Angeboten in Sekunden und liefert dir die besten Optionen auf einen Blick.",
-            icon: <Zap className={"w-5 h-5 text-yellow-400 mr-2"} />
+            description: "Durch Vektorsuche, verschnellern wir die Analyse mehrere Angeboten von Tagen auf wenige Minuten und liefern Dir die besten Optionen auf einen Blick.",
+            icon: <Zap className={"w-5 h-5 text-yellow-400 mr-2"}/>,
+            path: "/vectorsearch",
         },
         {
             title: "Einfache Bedienung",
             description: "Eine intuitive Benutzeroberfläche, die dir alle Informationen klar und verständlich darstellt.",
-            icon: <Brain className={"w-5 h-5 text-pink-500 mr-2"}/>
+            icon: <Brain className={"w-5 h-5 text-pink-500 mr-2"}/>,
+            path: "/fileUpload"
         },
         {
             title: "Künstliche Intelligenz",
-            description: "Unsere KI-Modelle sind darauf trainiert, die besten Angebote für dich zu finden.",
-            icon: <Wand className={"w-5 h-5 text-purple-500 mr-2"}/>
+            description: "Mithilfe von ChatGPT-4o analysieren wir deine Anforderungen und liefern dir die besten Ergebnisse.",
+            icon: <Wand className={"w-5 h-5 text-purple-500 mr-2"}/>,
+            path: "/ai",
         }
     ]
 
@@ -46,7 +49,7 @@ function App() {
                     <span className={"italic"}>
                         Schneller.&nbsp;
                     </span>
-                        Einfacher.
+                    Einfacher.
                     &nbsp;
                     <span
                         className={"flex items-center font-medium text-indigo-600 italic font-serif"}>
@@ -82,15 +85,16 @@ function App() {
                     {features.map((feature, index) => {
                         return (
                             <div key={index}
-                                 className={"w-full p-10 flex border max-w-[400px] bg-gray-50/60 border-gray-200 rounded-xl shadow-sm items-center " +
+                                 onClick={() => navigate(feature.path)}
+                                 className={"cursor-pointer hover:border-indigo-300 hover:bg-indigo-50 transition duration-300 w-full p-10 flex border max-w-[400px] group bg-gray-50/60 border-gray-200 rounded-xl shadow-sm items-center " +
                                      "flex-col "}>
                                 <div className={"flex items-center pb-4"}>
                                     {feature.icon}
-                                <p className={"font-semibold  "}>
-                                    {feature.title}
-                                </p>
+                                    <p className={"font-semibold group-hover:text-indigo-700 transition duration-500 "}>
+                                        {feature.title}
+                                    </p>
                                 </div>
-                                <p className={"font-light tracking-wide text-center text-sm"}>
+                                <p className={"font-light tracking-wide text-center group-hover:text-indigo-600 text-sm"}>
                                     {feature.description}
                                 </p>
                             </div>
