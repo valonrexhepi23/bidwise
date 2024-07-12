@@ -1,7 +1,7 @@
 import logo from "../assets/BidWise_Logo.png";
 import hawLogo from "../assets/HAW_Marke_RGB_300dpi.jpg";
 
-const ProjectPage = () => {
+const Project = () => {
     return (
         <div className={"p-10"}>
             <div className={"flex pb-10"}>
@@ -13,7 +13,7 @@ const ProjectPage = () => {
             <p className={"mt-5 tracking-wide text-xl ml-1"}>
                 Dieses Projekt wurde im Rahmen des Moduls "LLMs für KMUs" an der HAW Hamburg erstellt.
                 Ziel war es, ein Software-Produkt zu entwickeln, welches mehrere Angebote von verschiedenen
-                Anbietern anhand gewissen Anforderungen vergleicht.
+                Anbietern anhand gewissen Anforderungen vergleicht mit Hilfe von LLMs.
             </p>
             <div className={"mt-10 text-xl"}>
                 <h3 className={"text-2xl font-semibold"}>Verwendete Technologien:</h3>
@@ -38,7 +38,23 @@ const ProjectPage = () => {
                 <h3 className={"mt-10 text-2xl font-semibold"}>Code</h3>
                 <a href={"https://github.com/valonrexhepi23/bidwise"} className={"text-blue-500 underline"}>Github</a>
             </div>
+            <div>
+                <h3 className={"mt-10 text-2xl font-semibold"}>Für Wen ist das Ganze?</h3>
+                <ul className={"text-xl list-disc ml-5 mt-2"}>
+                    <li>Beratungsunternehmen</li>
+                    <li>Marketing- und Werbeagenturen</li>
+                    <li>Vertriebsunternehmen und Vertriebsteams</li>
+                </ul>
+            </div>
+            <div>
+                <h3 className={"mt-10 text-2xl font-semibold"}>Probleme?</h3>
+                <ul className={"text-xl list-disc ml-5 mt-2"}>
+                    <li>Prompts</li>
+                    <li>Schnelligkeit</li>
+                </ul>
+            </div>
+
         </div>
     );
 }
-export default ProjectPage;
+export default Project;

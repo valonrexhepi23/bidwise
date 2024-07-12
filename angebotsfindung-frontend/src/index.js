@@ -8,7 +8,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import FileUploadApp from "./file-upload/FileUpload";
-import ProjectPage from "./pages/ProjectPage";
+import Project from "./pages/Project";
 import VectorSearch from "./pages/VectorSearch";
 import AiModel from "./pages/AiModel";
 
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/project",
-        element: <ProjectPage/>,
+        element: <Project/>,
     },
     {
         path: "/vectorsearch",

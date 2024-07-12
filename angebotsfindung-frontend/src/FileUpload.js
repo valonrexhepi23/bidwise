@@ -77,22 +77,38 @@ function FileUpload({requirements, onBefore}) {
     };
 
     return (
-        <div className={"block  w-full px-20"}>
-            <div className={"w-full flex justify-center"}>
-                <input type="file" accept="application/pdf" multiple onChange={handleFileChange}/>
+        <div className={"block  w-full p-20  pt-2"}>
+            <div className={"w-full flex flex-wrap justify-center mb-10"}>
+                {
+                    requirements.map((req, index) => {
+                        return (
+                            <div key={index}
+                                 className={`flex border relative  px-4 py-2 rounded-xl group bg-gray-50`}>
+                                <div className={"break text-xs "}>
+                                    {req.requirement}
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+            <div className={"w-full flex justify-center items-center gap-10"}>
+
+                <input type="file" accept="application/pdf" className={"max-w-[200px]"} multiple
+                       onChange={handleFileChange}/>
                 <button disabled={uploadStatus || files.length === 0}
-                        className={`font-mono disabled:opacity-50 
-                         px-4 py-2 bg-amber-50 border border-amber-300 rounded-md text-amber-600 tracking-tight text-sm ${uploadStatus ? "border-amber-100/80 bg-amber-50/80" : ""}`}
+                        className={`font-mono disabled:opacity-50 hover:opacity-70
+                         px-4 py-2  border border-gray-300 rounded-md text-black bg-gray-50 tracking-tight text-sm ${uploadStatus ? "border-amber-100/80 bg-amber-50/80" : ""}`}
                         onClick={handleFileUpload}>
-                    {uploadStatus ? "isLoading" : "upload files"}
+                    {uploadStatus ? "Analysiere" : "Vergleiche die Angebote!"}
                 </button>
             </div>
             <div>{uploadStatus}</div>
-            <div className={"w-full grid grid-cols-1 gap-10 px-10 md:grid-cols-2 py-10 "}>
+            <div className={"w-full grid grid-cols-1 gap-3 px-10 md:grid-cols-2 py-10 "}>
                 {filesWithContent.map((fileWithContent, index) => {
                     return (
                         <div key={index}
-                             className={"p-4 m-2 min-h-60 w-fit border border-slate-300 bg-gray-50 tracking-tight rounded-md min-w-full"}>
+                             className={"p-4 m-2 min-h-60 w-fit border border-slate-300 bg-gray-50/80 tracking-tight rounded-lg shadow-md min-w-full"}>
                             <div className={"text-lg tracking-tight font-mono"}>
                                 {fileWithContent.fileTitle}
                             </div>
@@ -100,7 +116,7 @@ function FileUpload({requirements, onBefore}) {
                                 {fileWithContent.fileResponse.split("**").map((paragraph, index) => {
                                     return (
                                         <div key={index}>
-                                            <p className={"mb-5  break-words"}>
+                                            <p className={"mb-5 break-words"}>
                                                 {paragraph}
                                             </p>
                                             <span
@@ -119,7 +135,7 @@ function FileUpload({requirements, onBefore}) {
                 onClick={handleBefore}
                 className={"bg-black text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-100"}
             >
-                Back
+                Vorherige Seite
             </button>
         </div>
     )

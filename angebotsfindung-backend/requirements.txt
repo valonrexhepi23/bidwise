@@ -1,5 +1,9 @@
 fastapi~=0.111.0
 uvicorn~=0.30.1
 aiofiles
-PyMuPDF
+PyMuPDF>=1.18.13
 openai~=1.33.0
+pydantic>=1.8.0,<2.0.0
+python-dotenv~=1.0.1
+langchain~=0.2.6
+langchain-community~=0.2.7

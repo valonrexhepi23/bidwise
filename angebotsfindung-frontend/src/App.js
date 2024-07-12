@@ -5,6 +5,11 @@ import hawLogo from './assets/HAW_Marke_RGB_300dpi.jpg';
 import logo from './assets/BidWise_Logo.png';
 import {Wand, Zap, Brain} from "lucide-react";
 import {useNavigate} from "react-router-dom";
+import pythonLogo from "./assets/Python-logo-notext.svg.png";
+import reactLogo from "./assets/react.png";
+import openaiLogo from "./assets/openai-icon-505x512-pr6amibw.png";
+import tailwindLogo from "./assets/tailwind-css-logo-vector.png";
+
 
 function App() {
 
@@ -65,12 +70,12 @@ function App() {
                 <div className={"w-full flex justify-center"}>
                     <button
                         className={
-                            `px-10 py-3 font-semibold  border
+                            `px-6 py-3 font-semibold  border-[3px]
                             bg-indigo-600 text-white
-                            border-y-indigo-700 
-                         rounded-md shadow-sm text-sm
+                            border-indigo-300 
+                         rounded-xl shadow-sm text-lg
                          transition-colors duration-100
-                         hover:bg-indigo-700 hover:border-indigo-800
+                         hover:bg-indigo-700 
                         `
                         }
                         onClick={handleClick}
@@ -102,8 +107,18 @@ function App() {
                     })
                     }
                 </div>
+                <div className={"font-semibold text-xl mt-40"}>
+                    <h3>Verwendete Technologien</h3>
+                </div>
+                <div className={"relative mt-10 flex justify-center gap-10 "}>
+                    <img src={pythonLogo} alt="python" className={"  h-20 bottom-10 left-96 text-opacity-65"}/>
+                    <img src={reactLogo} alt="react" className={" bottom-20 right-20 -z-10 h-20 text-opacity-45"}/>
+                    <img src={openaiLogo} alt="openai" className={" bottom-20 -z-10 h-20 text-opacity-65 left-20"}/>
+                    <img src={tailwindLogo} alt="tailwind" className={" bottom-10 right-96 h-20 -z-10"}/>
+                </div>
             </div>
-            <div className={"absolute bottom-0 w-full border border-gray-200"}>
+            <div className={"mt-24 w-full border border-gray-200 border-b-0"}>
+
                 <div className={"w-full flex justify-center items-center gap-4 p-4"}>
                     <p className={"text-xs"}>
                         © 2024 BidWise
@@ -119,6 +134,8 @@ function App() {
                     </a>
                 </div>
             </div>
+
+
         </div>
     );
 }

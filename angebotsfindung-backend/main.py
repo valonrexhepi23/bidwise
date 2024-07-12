@@ -2,13 +2,13 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
-import fitz  # PyMuPDF
+import pymupdf
 import openai
 from dotenv import load_dotenv
 import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores.faiss import FAISS
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
 
 load_dotenv()
 
@@ -38,12 +38,6 @@ def prompt(requirements, offers):
     
     **Angebote:**
     {offers}
-    
-    Beachte:
-    1. Überprüfe, ob die Stückzahl mindestens den Anforderungen entspricht.
-    2. Überprüfe, ob der Gesamtpreis die Anforderungen nicht überschreitet.
-    3. Liste die positiven Aspekte auf, wenn die Anforderungen erfüllt sind.
-    4. Liste die negativen Aspekte auf, wenn die Anforderungen nicht erfüllt sind.
 
     **Ergebnisse:**
     Angebot:
@@ -51,15 +45,16 @@ def prompt(requirements, offers):
     -
     "negativ":
     -
-    "Fazit":
-    -
+    
+    
+    Halte dich sehr kurz. Wenn du keine Informationen über eine Anforderung hast, sollst du sie auch nicht beurteilen.
     """
     return pr
 
 
 async def extract_text_from_pdf(file: UploadFile):
     content = await file.read()
-    pdf_document = fitz.open(stream=content, filetype="pdf")
+    pdf_document = pymupdf.open(stream=content, filetype="pdf")
     text = ""
     for page in pdf_document:
         text += page.get_text()
@@ -72,7 +67,7 @@ async def process_file(file: UploadFile, requirements: str = None):
 
     text = await extract_text_from_pdf(file)
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=100,
+        chunk_size=300,
         chunk_overlap=0,
         length_function=len,
     )
@@ -89,12 +84,11 @@ async def process_file(file: UploadFile, requirements: str = None):
             text_embeddings=list(zip(texts, offer_embeddings)),
             embedding=embeddings
         )
-        similar_offers = vector_store.similarity_search_by_vector(vectors, k=3)
+        similar_offers = vector_store.similarity_search_by_vector(vectors, k=5)
         if similar_offers:
-            results[req] = similar_offers[0].page_content
+            results[req] = "\n".join([f"{k.page_content}" for k in similar_offers])
         else:
-            results[req] = ""
-
+            results[req] = "Diese Anforderung ist nicht erfüllt."
     # Call OpenAI API with extracted text
     results = "\n".join([f"{k}: {v}" for k, v in results.items()])
     response = openai.chat.completions.create(
@@ -122,6 +116,11 @@ async def create_upload_files(files: list[UploadFile] = File(...), requirements:
     print(requirements)
     results = await asyncio.gather(*[process_file(file, requirements) for file in files])
     return JSONResponse(content={"files": results})
+
+
+@app.post("/")
+async def hello_world():
+    return {"Hello": "World"}
 
 
 if __name__ == "__main__":
