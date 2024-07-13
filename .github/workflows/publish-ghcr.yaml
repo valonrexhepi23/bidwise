@@ -1,0 +1,22 @@
+name: Docker Image CI for GHCR
+
+on:
+  push:
+    branches:
+        - main
+        - develop
+        - feature/*
+        - hotfix/*
+        - release/*
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and push the Docker image
+        run: |
+          docker login --username valonrexhepi23 --password ${{ secrets.GH_PAT }} ghcr.io
+          docker build -t ghcr.io/valonrexhepi23/bidwise-frontend:latest ./angebote-frontend/*
+          docker build -t ghcr.io/valonrexhepi23/bidwise-backend:latest ./angebote-backend/*
+          docker push ghcr.io/valonrexhepi23/bidwise-frontend:latest
+          docker push ghcr.io/valonrexhepi23/bidwise-backend:latest
