@@ -26,9 +26,9 @@ jobs:
           ls -la ./angebotsfindung-backend
       - name: Build and push the Docker FRONTEND Image
         run: |
-          docker build -t ghcr.io/valonrexhepi23/bidwise-frontend:latest ./angebote-frontend          
+          docker build -t ghcr.io/valonrexhepi23/bidwise-frontend:latest ./angebotsfindung-frontend          
           docker push ghcr.io/valonrexhepi23/bidwise-frontend:latest
       - name: Build and push the Docker BACKEND image
         run: |
-          docker build -t ghcr.io/valonrexhepi23/bidwise-backend:latest ./angebote-backend
+          docker build -t ghcr.io/valonrexhepi23/bidwise-backend:latest ./angebotsfindung-backend
           docker push ghcr.io/valonrexhepi23/bidwise-backend:latest
