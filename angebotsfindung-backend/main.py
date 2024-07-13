@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
+from openai.types.chat.completion_create_params import ResponseFormat
 
 load_dotenv()
 
@@ -19,6 +20,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 origins = [
     "http://localhost:3000",
 ]
+response_format = ResponseFormat(type="json_object")
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,10 +34,10 @@ app.add_middleware(
 def prompt(requirements, offers):
     pr = f"""
     Vergleiche die folgenden Angebote mit den angegebenen Anforderungen und liste die positiven und negativen Aspekte auf:
-    
+
     **Anforderungen:**
     {requirements}
-    
+
     **Angebote:**
     {offers}
 
@@ -45,9 +47,8 @@ def prompt(requirements, offers):
     -
     "negativ":
     -
-    
-    
-    Halte dich sehr kurz. Wenn du keine Informationen über eine Anforderung hast, sollst du sie auch nicht beurteilen.
+
+    Halte dich sehr(!) kurz. Gib für jede erfüllte und nicht erfüllte Anforderung eine sehr kurze Beschreibung (maximal 1 Satz). Beurteile Anforderungen nur, wenn ausreichende Informationen vorliegen.
     """
     return pr
 
@@ -90,18 +91,19 @@ async def process_file(file: UploadFile, requirements: str = None):
         else:
             results[req] = "Diese Anforderung ist nicht erfüllt."
     # Call OpenAI API with extracted text
-    results = "\n".join([f"{k}: {v}" for k, v in results.items()])
+    results = "\n".join([f"{v}" for k, v in results.items()])
+    print(results)
     response = openai.chat.completions.create(
         messages=[
             {"role": "system",
-             "content": "Du bist ein erfahrener Angebotsanalyst. Vergleiche das folgende Angebot mit den angegebenen "
-                        "Anforderungen und liste kurz die positiven und negativen Aspekte auf. Gib eine sehr kurze "
-                        "Beschreibung (1 Satz) für jede erfüllte und nicht erfüllte Anforderung. Du sollst nichts "
-                        "erfinden. Wenn du keine Informationen über eine Anforderung hast sollst du sie auch nicht "
-                        "beurteilen."},
+             "content": "Du bist ein erfahrener Angebotsanalyst. "
+                        "Vergleiche das folgende Angebot mit den angegebenen Anforderungen und liste die positiven und negativen Aspekte auf. Gib eine sehr(!) kurze Beschreibung (maximal 1 Satz, maximal 12 Wörter) für jede erfüllte und nicht erfüllte Anforderung als JSON-Format. Erfinde nichts. Beurteile Anforderungen nur, wenn ausreichende Informationen vorliegen. "
+                        "Wenn du nicht genügend Informationen hast, schreibe nichts!"
+             },
             {"role": "user", "content": prompt(requirements, results)},
         ],
         model="gpt-4-turbo",
+        response_format=response_format,
         max_tokens=2000,
     )
 
@@ -116,11 +118,6 @@ async def create_upload_files(files: list[UploadFile] = File(...), requirements:
     print(requirements)
     results = await asyncio.gather(*[process_file(file, requirements) for file in files])
     return JSONResponse(content={"files": results})
-
-
-@app.post("/")
-async def hello_world():
-    return {"Hello": "World"}
 
 
 if __name__ == "__main__":
