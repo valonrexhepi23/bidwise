@@ -13,10 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build and push the Docker image
+      - name: Log in to Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: valonrexhepi23
+      - name: Build and push the Docker FRONTEND Image
         run: |
-          docker login --username valonrexhepi23 --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build -t ghcr.io/valonrexhepi23/bidwise-frontend:latest ./angebote-frontend/*
-          docker build -t ghcr.io/valonrexhepi23/bidwise-backend:latest ./angebote-backend/*
+          docker build -t ghcr.io/valonrexhepi23/bidwise-frontend:latest ./angebote-frontend          
           docker push ghcr.io/valonrexhepi23/bidwise-frontend:latest
+      - name: Build and push the Docker BACKEND image
+        run: |
+          docker build -t ghcr.io/valonrexhepi23/bidwise-backend:latest ./angebote-backend
           docker push ghcr.io/valonrexhepi23/bidwise-backend:latest
