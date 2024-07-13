@@ -19,6 +19,11 @@ jobs:
           registry: ghcr.io
           username: valonrexhepi23
           password: ${{ secrets.GH_PAT }}
+      - name: List directory contents
+        run: |
+          ls -la
+          ls -la ./angebotsfindung-frontend
+          ls -la ./angebotsfindung-backend
       - name: Build and push the Docker FRONTEND Image
         run: |
           docker build -t ghcr.io/valonrexhepi23/bidwise-frontend:latest ./angebote-frontend          
