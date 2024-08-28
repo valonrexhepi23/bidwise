@@ -1,34 +1,43 @@
-# bidwise
+# Bidwise
 
 ## Frontend
 
-We used React for the frontend.
+We built the frontend using **React**.
 
 ### Why React?
 
-We had basic knowledge for React.
+We chose React because we had basic knowledge of the framework.
 
 ### Styling
 
-We used Tailwind CSS for styling.
+For styling, we used **Tailwind CSS**.
 
-### How to start?
+### How to Start the Frontend
 
-```
-npm install
-npm start
-```
+1. Navigate to the frontend directory:
+    ```bash
+    cd angebotsfindung-frontend
+    ```
+2. Install the necessary dependencies:
+    ```bash
+    npm install
+    ```
+3. Start the frontend:
+    ```bash
+    npm start
+    ```
 
 ## Backend
 
-We used for the backend Python.
+The backend is built with **Python**.
 
 ### Why Python?
 
-Python is easy to use and to understand. Also it comes with so many third-party libraries and frameworks like PyMuPDF.
+We selected Python due to its vast array of frameworks, libraries, and overall ease of use.
 
-### How to start the script?
+### How to Start the Backend Script
 
-```
+To run the backend, use the following command:
+
+```bash
 uvicorn main:app --reload
-```

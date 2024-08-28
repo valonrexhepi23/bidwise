@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: ./angebotsfindung-backend
+    image: ghcr.io/valonrexhepi23/bidwise-backend:latest
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+
+  frontend:
+    build: ./angebotsfindung-frontend
+    image: ghcr.io/valonrexhepi23/bidwise-frontend:latest
+    container_name: bidwise-frontend
+    ports:
+      - "3000:3000"
