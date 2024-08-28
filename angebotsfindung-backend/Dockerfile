@@ -29,6 +29,7 @@ EXPOSE 8000
 
 # Step 9: Set environment variables (optional)
 ENV APP_ENV=production
+ENV OPENAPI_URL=${OPENAI_API_KEY}
 
 # Step 10: Specify the command to run the app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
