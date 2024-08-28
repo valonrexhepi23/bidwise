@@ -9,7 +9,6 @@ import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
-from openai.types.chat.completion_create_params import ResponseFormat
 
 load_dotenv()
 
@@ -20,7 +19,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 origins = [
     "http://localhost:3000",
 ]
-response_format = ResponseFormat(type="json_object")
 
 app.add_middleware(
     CORSMiddleware,
@@ -43,9 +41,9 @@ def prompt(requirements, offers):
 
     **Ergebnisse:**
     Angebot:
-    "positiv":
-    -
-    "negativ":
+    positiv:
+    \n
+    negativ:
     -
 
     Halte dich sehr(!) kurz. Gib für jede erfüllte und nicht erfüllte Anforderung eine sehr kurze Beschreibung (maximal 1 Satz). Beurteile Anforderungen nur, wenn ausreichende Informationen vorliegen.
@@ -97,13 +95,15 @@ async def process_file(file: UploadFile, requirements: str = None):
         messages=[
             {"role": "system",
              "content": "Du bist ein erfahrener Angebotsanalyst. "
-                        "Vergleiche das folgende Angebot mit den angegebenen Anforderungen und liste die positiven und negativen Aspekte auf. Gib eine sehr(!) kurze Beschreibung (maximal 1 Satz, maximal 12 Wörter) für jede erfüllte und nicht erfüllte Anforderung als JSON-Format. Erfinde nichts. Beurteile Anforderungen nur, wenn ausreichende Informationen vorliegen. "
+                        "Vergleiche das folgende Angebot mit den angegebenen Anforderungen "
+                        "und liste die positiven und negativen Aspekte auf. Gib eine sehr(!) kurze Beschreibung "
+                        "(maximal 1 Satz, maximal 12 Wörter) für jede erfüllte und nicht erfüllte Anforderung. Erfinde nichts. "
+                        "Beurteile Anforderungen nur, wenn ausreichende Informationen vorliegen. "
                         "Wenn du nicht genügend Informationen hast, schreibe nichts!"
              },
             {"role": "user", "content": prompt(requirements, results)},
         ],
         model="gpt-4-turbo",
-        response_format=response_format,
         max_tokens=2000,
     )
 
