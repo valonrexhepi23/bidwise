@@ -78,7 +78,7 @@ function FileUpload({requirements, onBefore}) {
 
     return (
         <div className={"block  w-full p-20  pt-2"}>
-            <div className={"w-full flex flex-wrap justify-center mb-10"}>
+            <div className={"w-full flex flex-wrap justify-center mb-10 gap-3"}>
                 {
                     requirements.map((req, index) => {
                         return (
