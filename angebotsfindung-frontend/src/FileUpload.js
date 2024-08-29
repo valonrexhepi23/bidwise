@@ -78,20 +78,6 @@ function FileUpload({requirements, onBefore}) {
 
     return (
         <div className={"block  w-full p-20  pt-2"}>
-            <div className={"w-full flex flex-wrap justify-center mb-10 gap-3"}>
-                {
-                    requirements.map((req, index) => {
-                        return (
-                            <div key={index}
-                                 className={`flex border relative  px-4 py-2 rounded-xl group bg-gray-50`}>
-                                <div className={"break text-xs "}>
-                                    {req.requirement}
-                                </div>
-                            </div>
-                        )
-                    })
-                }
-            </div>
             <div className={"w-full flex justify-center items-center gap-10"}>
 
                 <input type="file" accept="application/pdf" className={"max-w-[200px]"} multiple

@@ -67,8 +67,8 @@ To run the backend you need an OpenAI API key. You can get one [here](https://be
 
 ## AI Model
 
-We choose the OpenAI GPT-4o model for our AI model.
+We choose the OpenAI GPT-4-Turbo model for our AI model.
 
-### Why GPT-4o?
+### Why GPT-4-Turbo?
 
-We chose GPT-4o because it was the most recent model available to us.
+We chose GPT-4-Turbo because it was the most recent model available to us.

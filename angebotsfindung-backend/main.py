@@ -35,14 +35,12 @@ def prompt(requirements, offers):
 
     **Anforderungen:**
     {requirements}
-
     **Angebote:**
     {offers}
-
     **Ergebnisse:**
     Angebot:
     positiv:
-    \n
+    \n\n
     negativ:
     -
 
@@ -87,7 +85,7 @@ async def process_file(file: UploadFile, requirements: str = None):
         if similar_offers:
             results[req] = "\n".join([f"{k.page_content}" for k in similar_offers])
         else:
-            results[req] = "Diese Anforderung ist nicht erfüllt."
+            results[req] = "\nDiese Anforderung ist nicht erfüllt."
     # Call OpenAI API with extracted text
     results = "\n".join([f"{v}" for k, v in results.items()])
     print(results)
@@ -108,9 +106,13 @@ async def process_file(file: UploadFile, requirements: str = None):
     )
 
     print(response.choices[0].message.content)
-
+    full_response = f"""
+    Anforderungen: {requirements}
+    
+    {response.choices[0].message.content}
+    """
     return {"filename": file.filename, "content_length": len(text),
-            "openai_response": response.choices[0].message.content}
+            "openai_response": full_response}
 
 
 @app.post("/uploadfiles")
